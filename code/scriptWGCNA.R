@@ -83,7 +83,45 @@ cluster1data <- select(cluster1data, -Cluster)
 cluster2data <- select(cluster2data, -Cluster)
 # Una vez tenemos el dataset dividido y normalizado ya podemos utilizar el WGCNA
 library(WGCNA)
+library(DCGL)
+#Creamos las diferentes expresiones teniendo cuidado porque debemos tener el mismo numero  en las filas asi dividimos en 6 objetos con 6 variables
+#Y ademá tenemos que ir recorriendo esas variables.
+#cluster1
+exprs.1<-cluster1data[1:6,1:6]
+exprs.2<-cluster1data[7:12,7:12]
+exprs.3<-cluster1data[13:18,13:18]
+exprs.4<-cluster1data[19:24,19:24]
 
+#Cluster2
+exprs.5<-cluster2data[1:6,1:6]
+exprs.6<-cluster2data[7:12,7:12]
+exprs.7<-cluster2data[13:18,13:18]
+exprs.8<-cluster2data[19:24,19:24]
+exprs.9<-cluster2data[25:30,25:30]
+exprs.10<-cluster2data[31:36,31:36]
+exprs.11<-cluster2data[37:42,37:42]
+exprs.12<-cluster2data[43:48,43:48]
+exprs.13<-cluster2data[49:54,49:54]
+
+#UNIMOS LA MITAD DE LAS EXPRESIONES ANTERIORES Y DIVIDIMOS EN 2
+expresion1<-cbind(exprs.1,exprs.2,exprs.3,exprs.4,exprs.5,exprs.6,exprs.7[13:15,])
+expresion2<-cbind(exprs.7[16:18,],exprs.8,exprs.9,exprs.10,exprs.11,exprs.12,exprs.13)
+
+#Aquí lo que hacemos es observar para seleccionar loe genes coexpresados  deferenciales según el analisis
+#de red de coexpresión generica ponderada (WGCNA)
+WGCNA.res1 <- WGCNA(exprs.1=expresion1, exprs.2=expresion2, power = 12, variant = "WGCNA")
+WGCNA.res1[1:6]
+
+#Vemos los enlaces y sus umbrales de correlacion para usarlo luego
+Links <- qLinkfilter(expresion1, expresion2, 0.25)
+names(Links)
+#Links$rth contienen los dos umbrales de correlación para ambas condiciones;
+#Ambos Links$cor.filtered. mantienen las matrices de correlación filtradas para las condiciones A y B.
+#Vemos los umbrales de correlación:
+umbral_ex1<-Links$rth.1
+#tiene una correlacion de 0.803
+umbral_ex2<-Links$rth.2
+# tiene una correlacion de 0.527
 
 
 

@@ -1,6 +1,6 @@
-workingDir <- "C:/Users/Mariana/Desktop/PROYECTO/BS"
-workDirRESULT<- "C:/Users/Mariana/Documentos/GitHub/project_template_BS_SARS-CoV2/results"
-setwd(workingDir)
+
+resultsDir<-setwd("C:/Users/Ana/Desktop/Uni/PrimerCuatri/BiologíaSist/TRABAJOFINAL/project_template_BS_SARS-CoV2/results")
+workingDir<-setwd("C:/Users/Ana/Desktop/Uni/PrimerCuatri/BiologíaSist/TRABAJOFINAL")
 getwd()
 #
 library(ggplot2)
@@ -19,7 +19,7 @@ counts_matrix <- as.matrix(counts_df)
 counts_dfT<-as.data.frame(t(counts_df))
 kmedioids2 <- pam(counts_dfT,2)
 #CLUSTERING No ejecutar tarda mucho
-fviz_nbclust(normalized_counts, FUNcluster=hcut, k.max = 5, method = "wss")
+#fviz_nbclust(normalized_counts, FUNcluster=hcut, k.max = 5, method = "wss")
 #Guardo un array de los clusters
 counts_clustering<-kmedioids2[["clustering"]]
 #Creo un dataframe con los clusters y genes
@@ -40,8 +40,7 @@ normalized_counts_no_NaT<-as.data.frame(t(normalized_counts_no_Na))
 sampleTree <- hclust(dist(normalized_counts_no_NaT), method = "average")
 # Plot the sample tree: Open a graphic output window of size 12 by 9 inches
 # The user should change the dimensions if the window is too large or too small.
-setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
-getwd()
+setwd(resultsDir)
 sizeGrWindow(12,9)
 pdf(file = "SampleClustering.pdf", width = 12, height = 9)
 par(cex = 0.6)
@@ -52,7 +51,6 @@ plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="",
 abline(h = 790000, col = "red")##linea roja que separa para identificar los outliers
 dev.off()
 setwd(workingDir)
-
 
 
 #Uno los clusters a cada gen
@@ -192,6 +190,7 @@ powers <- c(1:30)
 sft <- pickSoftThreshold(datos_expresiones, powerVector = powers, verbose = 5)
 # Plot the results:
 #sizeGrWindow(9, 5)
+setwd(resultsDir)
 pdf(file="2_Scale independence.pdf",width=9,height=5)
 par(mfrow = c(1,2))
 cex1 = 0.9
@@ -209,7 +208,7 @@ plot(sft$fitIndices[,1], sft$fitIndices[,5],
      main = paste("Mean connectivity"))
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 dev.off()
-
+setwd(workingDir)
 
 ######chose the softPower
 
@@ -223,12 +222,13 @@ dissTOM <- 1-TOM
 # Call the hierarchical clustering function
 geneTree <- hclust(as.dist(dissTOM), method = "average")
 # Plot the resulting clustering tree (dendrogram)
-
+setwd(resultsDir)
 #sizeGrWindow(12,9)
 pdf(file="3_Gene clustering on TOM-based dissimilarity.pdf",width=12,height=9)
 plot(geneTree, xlab="", sub="", main = "Gene clustering on TOM-based dissimilarity",
      labels = FALSE, hang = 0.04)
 dev.off()
+setwd(workingDir)
 
 
 # We like large modules, so we set the minimum module size relatively high:
@@ -244,12 +244,14 @@ dynamicColors = labels2colors(dynamicMods)
 table(dynamicColors)
 # Plot the dendrogram and colors underneath
 #sizeGrWindow(8,6)
+setwd(resultsDir)
 pdf(file="4_Dynamic Tree Cut.pdf",width=8,height=6)
 plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut",
                     dendroLabels = FALSE, hang = 0.03,
                     addGuide = TRUE, guideHang = 0.05,
                     main = "Gene dendrogram and module colors")
 dev.off()
+setwd(workingDir)
 
 ##CALCULAMOS EL GEN PROPIO
 MEList <- moduleEigengenes(datos_expresiones, colors = dynamicColors)
@@ -260,6 +262,7 @@ MEDiss <- 1-cor(MEs);
 METree <- hclust(as.dist(MEDiss), method = "average")
 # Plot the result
 #sizeGrWindow(7, 6)
+setwd(resultsDir)
 pdf(file="5_Clustering of module eigengenes.pdf",width=7,height=6)
 plot(METree, main = "Clustering of module eigengenes",
      xlab = "", sub = "")
@@ -267,7 +270,7 @@ MEDissThres = 0.5
 # Plot the cut line into the dendrogram
 abline(h=MEDissThres, col = "red")
 dev.off()
-
+setwd(workingDir)
 # Call an automatic merging function
 merge <- mergeCloseModules(datos_expresiones, dynamicColors, cutHeight = MEDissThres, verbose = 3)
 # The merged module colors
@@ -275,6 +278,7 @@ mergedColors <- merge$colors
 # Eigengenes of the new merged modules:
 mergedMEs <-merge$newMEs
 #sizeGrWindow(12, 9)
+setwd(resultsDir)
 pdf(file="6_Merged dynamic.pdf", width = 9, height = 6)
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors),
                     c("Dynamic Tree Cut", "Merged dynamic"),
@@ -282,7 +286,7 @@ plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors),
                     addGuide = TRUE, guideHang = 0.05)
 dev.off()
 #podemos ver que nos salen igual
-
+setwd(workingDir)
 # Rename to moduleColors
 moduleColors <- mergedColors
 # Construct numerical labels corresponding to the colors
@@ -330,12 +334,14 @@ for (mod in 1:ncol(geneModuleMembership))
 geneOrder <-order(geneInfo0$moduleColor)
 geneInfo <- geneInfo0[geneOrder, ]
 
+setwd(resultsDir)
+
 write.table(geneInfo, file = "7_COVID.xls",sep="\t",row.names=F)
 #Vemos el valor de los genes en las diferentes muestras
 
 ########VISUALIZAR RED GENES#################
 
-
+setwd(workingDir)
 nGenes <- ncol(datos_expresiones)
 nSamples <- nrow(datos_expresiones)
 
@@ -348,9 +354,11 @@ diag(plotTOM) <- NA
 # Call the plot function
 
 #sizeGrWindow(9,9)
+setwd(resultsDir)
 pdf(file="8_Network heatmap plot_all gene.pdf",width=9, height=9)
 TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
 dev.off()
+setwd(workingDir)
 
 nSelect <- 400
 # For reproducibility, we set the random seed
@@ -368,10 +376,11 @@ selectColors <- moduleColors[select]
 plotDiss <- selectTOM^7
 diag(plotDiss) <- NA
 
+setwd(resultsDir)
 pdf(file="9_Network heatmap plot_selected genes.pdf",width=9, height=9)
 TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
 dev.off()
-
+setwd(workingDir)
 
 #########Visualizing the gene network of eigengenes#############
 
@@ -379,21 +388,22 @@ dev.off()
 #sizeGrWindow(5,7.5)
 
 #Dendrograma de genes propios y mapa de calor de adyacencia de genes propios
+setwd(resultsDir)
 pdf(file="10_Eigengene dendrogram and Eigengene adjacency heatmap.pdf", width=5, height=7.5)
 par(cex = 0.9)
 plotEigengeneNetworks(MEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle= 90)
 dev.off()
-
+setwd(workingDir)
 
 #Mapa de calor de adyacencia de genes propios
-
+setwd(resultsDir)
 pdf(file="12_Eigengene adjacency heatmap_2.pdf",width=6, height=6)
 # Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
 par(cex = 1.0)
 plotEigengeneNetworks(MEs, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2), plotDendrograms = FALSE, xLabelsAngle = 90)
 dev.off()
 
-
+setwd(workingDir)
 ###########################Exporting to Cytoscape all one by one ##########################
 
 
@@ -415,6 +425,7 @@ for (mod in 1:nrow(table(moduleColors)))
   
   dimnames(modTOM) <- list(modProbes, modProbes)
   # Export the network into edge and node list files Cytoscape can read
+  setwd(resultsDir)
   cyt <- exportNetworkToCytoscape(modTOM,
                                  edgeFile = paste("CytoscapeInput-edges-", modules , ".txt", sep=""),
                                  nodeFile = paste("CytoscapeInput-nodes-", modules, ".txt", sep=""),
@@ -425,19 +436,26 @@ for (mod in 1:nrow(table(moduleColors)))
                                  nodeAttr = moduleColors[inModule])
 }
 
-BiocManager ::install ("coexnet")
+setwd(workingDir)
+
 library(coexnet)
-library(tidyverse)
 pathfile1 <- system.file("extdata","CytoscapeInput-edges-blue.txt",package = "coexnet")
 data_blue <- read.table(pathfile1,stringsAsFactors = FALSE)
 # Building the network
-
-
+geneInfoCom<-as.data.frame(geneInfo0)
+geneInfoCom$probes<-NULL
+geneInfoCom$moduleColor<-NULL
 
 dataC<-geneInfo0[,-c(1:2)]
+setwd("C:/Users/Ana/Desktop/Uni/PrimerCuatri/BiologíaSist/TRABAJOFINAL/project_template_BS_SARS-CoV2/results")
+getwd()
 cor_pearson <- createNet(expData = dataC,threshold = 0.99,method = "correlation")
 plot(cor_pearson)
-jpeg("cor_pearson.jpeg")
-plot(cor_pearson)
+jpeg(plot(cor_pearson),"cor_pearson.jpg")
 dev.off()
+setwd("C:/Users/Ana/Desktop/Uni/PrimerCuatri/BiologíaSist/TRABAJOFINAL")
+getwd()
+
+
+
 

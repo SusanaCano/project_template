@@ -6,26 +6,23 @@
 ################## Actualir R en windows ################
 # Instala / carga el paquete
 
-#if(!require(installr)) {
- # install.packages("installr")
-  #require(installr)
-  #} 
+if(!require(installr)) {
+  install.packages("installr", repos = 'http://cran.us.r-project.org')
+  require(installr)
+  } 
 
-# setwd("D:/uni/2020-21/BiologiaSistemas/Practicas/Aurelio/trabajoFinal/Git/project_template_BS_SARS-CoV2/code")
-###
 # actualizar R
-#install.packages("installr")
+#install.packages("installr", repos = 'http://cran.us.r-project.org')
 
-#library("installr")
+library("installr", repos = 'http://cran.us.r-project.org')
 
 ########################################################
 
 
 ################### Rtool para BiocManager #######################
 if (!requireNamespace ("BiocManager", quietly = TRUE)) 
-  #if (!requireNamespace ("BiocManager", quietly = TRUE)) 
-#install.packages ("BiocManager")
- install.packages("BiocManager", repos = 'http://cran.us.r-project.org')
+
+install.packages("BiocManager", repos = 'http://cran.us.r-project.org')
 
 BiocManager::install(c("RTCGAToolbox", "WGCNA", "DESeq2", "coexnet")) 
 
@@ -34,6 +31,7 @@ install.packages("factoextra", repos = 'http://cran.us.r-project.org')
 install.packages("NbClust", repos = 'http://cran.us.r-project.org')
 install.packages("DCGL", repos = 'http://cran.us.r-project.org')
 install.packages("ggplot2", repos = 'http://cran.us.r-project.org')
+install.packages("tidyverse ", repos = 'http://cran.us.r-project.org')
 ###########################################################
 
 ### cargamos las librerias:
@@ -49,5 +47,4 @@ library("DCGL") # Análisis de coexpresión diferencial y análisis de regulaci�
                 # datos de microarrays de expresión génica
 
 library("coexnet") # Graficas de coexpresion de genes
-
-
+library("tidyverse")

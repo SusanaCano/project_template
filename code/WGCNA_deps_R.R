@@ -6,7 +6,7 @@
 ################## Actualir R en windows ################
 # Instala / carga el paquete
 if(!require(installr)) {
-  install.packages("installr")
+  install.packages("installr", repos='http://cran.us.r-project.org')
   require(installr)
   } 
 
@@ -23,16 +23,18 @@ library("installr")
 ################### Rtool para BiocManager #######################
 if (!requireNamespace ("BiocManager", quietly = TRUE)) 
 
-install.packages ("BiocManager")
+install.packages ("BiocManager", repos='http://cran.us.r-project.org')
 
 BiocManager :: install ("RTCGAToolbox")
 BiocManager :: install("WGCNA")
 BiocManager :: install ("DESeq2")
+BiocManager ::install ("coexnet") # Graficas de coexpresion de genes
 
-install.packages ("dplyr")
-install.packages("factoextra")
-install.packages("NbClust")
-install.packages("DCGL")
+install.packages ("dplyr", repos='http://cran.us.r-project.org')
+install.packages("factoextra", repos='http://cran.us.r-project.org')
+install.packages("NbClust", repos='http://cran.us.r-project.org')
+install.packages("DCGL", repos='http://cran.us.r-project.org')
+
 ###########################################################
 
 ### cargamos las librerias:
@@ -45,7 +47,6 @@ library("cluster") # Encontrar grupos en los datos
 library("DESeq2") # Análisis de datos de RNA-seq
 library("DCGL") # Análisis de coexpresión diferencial y análisis de regulación diferencial de 
                 # datos de microarrays de expresión génica
-
-
+library("coexnet")
 
 

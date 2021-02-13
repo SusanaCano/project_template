@@ -34,6 +34,7 @@ install.packages("factoextra", repos = 'http://cran.us.r-project.org')
 install.packages("NbClust", repos = 'http://cran.us.r-project.org')
 install.packages("DCGL", repos = 'http://cran.us.r-project.org')
 install.packages("ggplot2", repos = 'http://cran.us.r-project.org')
+install.packages("tidyverse", repos = 'http://cran.us.r-project.org')
 ###########################################################
 
 ### cargamos las librerias:
@@ -49,5 +50,6 @@ library("DCGL") # Análisis de coexpresión diferencial y análisis de regulaci�
                 # datos de microarrays de expresión génica
 
 library("coexnet") # Graficas de coexpresion de genes
+library("tidyverse")
 
 

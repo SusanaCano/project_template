@@ -37,6 +37,7 @@ memory.limit(size = 35000)#para problema de memoria
 
 
 # Convertimos la adyacencia en TOM ( Matriz Topológica de Superposición)
+TOM<-TOMsimilarity(adjacency)
 dissTOM <- 1-TOM
 
 

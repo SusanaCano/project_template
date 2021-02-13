@@ -59,7 +59,4 @@ umbral_ex3<-Links7$rth.1
 umbral_ex9<-Links7$rth.2
 #Vamos que tiene una correlacion de 0.391231
 
-
-
-
 datos_expresiones<-rbind(expresion3,expresion4)

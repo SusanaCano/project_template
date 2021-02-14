@@ -81,8 +81,8 @@ datos_normalizados<-normalized_counts_no_NaT
 
 #Aplicamos clustering usando la funcion hclust() con el linkage average
 sampleTree <- hclust(dist(datos_normalizados), method = "average")
-#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
-#getwd()
+setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 #Creamos un pdf del arbol que muestra el clustering realizado
 pdf(file = "1_SampleClustering.pdf", width = 12, height = 9)
 par(cex = 0.6)

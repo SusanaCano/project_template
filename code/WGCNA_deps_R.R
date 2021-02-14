@@ -1,9 +1,10 @@
 # WGCNA: en windows
 # Es necesario actualizar R a la versión 4.0.3
 
-# No ejecutar esto si se tiene la última versión de R
+args<-commandArgs(trailingOnly=TRUE)
+wd<-args[2]
+libdir<-args[3]
 
-libdir<-"C:/Users/Ana/Desktop/Uni/PrimerCuatri/Biolog�aSist/TRABAJOFINAL/software/deps/"
 
 ################## Actualir R en windows ################
 # Instala / carga el paquete
@@ -14,8 +15,6 @@ if(!require(installr)) {
 
 
 ###
-# actualizar R
-#install.packages("installr")
 
 library("installr")
 

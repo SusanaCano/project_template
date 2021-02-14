@@ -430,12 +430,28 @@ library(coexnet)
 library(tidyverse)
 
 # Building the network
-dataC<-geneInfo0[,-c(1:2)]
-memory.limit(size = 120000)#hay que aumentar el espacio de memoria
+#dataC<-geneInfo0[,-c(1:2)]
+#memory.limit(size = 120000)#hay que aumentar el espacio de memoria
 
-cor_pearson <- createNet(expData = dataC,threshold = 0.99,method = "correlation")
-plot(cor_pearson)
+#cor_pearson <- createNet(expData = dataC,threshold = 0.99,method = "correlation")
+#plot(cor_pearson)
+#jpeg("cor_pearson.jpeg")
+#plot(cor_pearson)
+#dev.off()
+
+cor_pearson1 <- createNet(expData = datos_expresiones,threshold = 1,method = "correlation")
+plot(cor_pearson1)
 jpeg("cor_pearson.jpeg")
-plot(cor_pearson)
+plot(cor_pearson1)
 dev.off()
+
+dataC1<-dataC
+complete <- cofVar(dataC1)
+
+pdf(file="13_Boxplot.pdf",width=6, height=6)
+boxplot(dataC1, main="Boxplot groups")
+dev.off()
+vb<-boxplot(dataC1)
+vb$out
+#Esto ultimo lo hacemos para ver los valores atípicos
 

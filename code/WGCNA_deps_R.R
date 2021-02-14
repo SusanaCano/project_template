@@ -1,21 +1,22 @@
+args = commandArgs(trailingOnly = TRUE)
+wd <- args[2]
+software_deps <- args[3]
+
 # WGCNA: en windows
 # Es necesario actualizar R a la versión 4.0.3
 
-args<-commandArgs(trailingOnly=TRUE)
-wd<-args[2]
-libdir<-args[3]
-
+# No ejecutar esto si se tiene la última versión de R
 
 ################## Actualir R en windows ################
 # Instala / carga el paquete
+
 if(!require(installr)) {
-  install.packages("installr", repos='http://cran.us.r-project.org', lib = libdir)
+
+  install.packages("installr", repos = 'http://cran.us.r-project.org')
   require(installr)
   } 
 
-
-###
-
+# actualizar R
 library("installr")
 
 ########################################################
@@ -24,31 +25,15 @@ library("installr")
 ################### Rtool para BiocManager #######################
 if (!requireNamespace ("BiocManager", quietly = TRUE)) 
 
-install.packages ("BiocManager" , repos='http://cran.us.r-project.org')
+install.packages("BiocManager", repos = 'http://cran.us.r-project.org')
 
-BiocManager::install("RTCGAToolbox", lib = libdir)
-BiocManager::install("WGCNA", lib = libdir)
-BiocManager::install("DESeq2", lib = libdir)
-BiocManager::install("coexnet", lib = libdir)
+BiocManager::install(c("RTCGAToolbox", "WGCNA", "DESeq2", "coexnet"),  lib = software_deps) 
 
-
-install.packages ("dplyr", repos='http://cran.us.r-project.org', lib = libdir)
-install.packages("factoextra", repos='http://cran.us.r-project.org', lib= libdir)
-install.packages("NbClust", repos='http://cran.us.r-project.org', lib = libdir)
-install.packages("DCGL", repos='http://cran.us.r-project.org', lib = libdir)
+install.packages ("dplyr", repos = 'http://cran.us.r-project.org',  lib = software_deps)
+install.packages("factoextra", repos = 'http://cran.us.r-project.org',  lib = software_deps)
+install.packages("DCGL", repos = 'http://cran.us.r-project.org',  lib = software_deps)
+install.packages("ggplot2", repos = 'http://cran.us.r-project.org',  lib = software_deps)
 
 ###########################################################
-
-### cargamos las librerias:
-
-library("WGCNA") # Análisis de redes de coexpresión de genes ponderados
-library("dplyr") # Manipulación de dataframes
-library("factoextra") # Extracción y visualice los resultados de análisis de datos multivariados
-library("NbClust") # Determinar el mejor número de clústeres en un conjunto de datos
-library("cluster") # Encontrar grupos en los datos
-library("DESeq2") # Análisis de datos de RNA-seq
-library("DCGL") # Análisis de coexpresión diferencial y análisis de regulación diferencial de 
-                # datos de microarrays de expresión génica
-library("coexnet")
 
 

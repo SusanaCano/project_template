@@ -3,12 +3,6 @@
 
 # Carga e instalaciones de librerias en R
 
-#SOFTWARE=$
-#mkdir -p $SOFTWARE
-#chmod 755 project_template_BS_SARS-CoV2
-
-#mkdir $SOFTWARE software/deps
-# chmod 755 software/deps
 WORKINGDIR=$1
 
 chmod 755 $WORKINGDIR

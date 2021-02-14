@@ -1,73 +1,113 @@
-workingDir <- "C:/Users/Mariana/Desktop/PROYECTO/BS"
-
+workingDir <- "C:/Users/Mariana/Desktop/PROYECTO/BS/datos nuevos"
 setwd(workingDir)
 getwd()
 #
+install.packages ("BiocManager")
+BiocManager :: install ("DESeq2")
+BiocManager ::install ("coexnet")
+
+library(coexnet)
+library(tidyverse)
 library(ggplot2)
 library(factoextra)
 library(NbClust)
 library(cluster)
-install.packages ("BiocManager")
-BiocManager :: install ("DESeq2")
+library(dplyr)
 library(DESeq2)
 library(WGCNA)
+library(DCGL)
 
+library(imager)#para visualizar la parte de la neurona
+
+
+#####PREPROCESAMIENTO DE DATOS Y CLUSTERING#######
+##PREPROCESAMIENTO DE DATOS
+
+#Cargamos los datos
 counts_df <- read.csv("GSE147507_RawReadCounts_Human.tsv", sep="\t", row.names=1)
+counts_df[counts_df==0]<-NA
+counts_dfT<-as.data.frame(t(counts_df))
+#Estas serían las columnas a borrar
+cols_borrar <- which(colMeans(is.na(counts_dfT)) >=0.51)
+#Borramos donde todas las filas sean NA
+counts_dfT <- counts_dfT[,-cols_borrar]
+#Transformamos de nuevo los NA en 0
+funcionTo0 <- function(x){
+  ifelse(is.na(x), 0, x)
+}
+datos<- sapply(counts_dfT,funcionTo0)
+filas <- rownames(counts_dfT)
+
+###DATOS SIN COLUMNAS QUE SON ENTERAS 0
+datos<- data.frame(datos,row.names=filas)
+
+
+counts_df<-t(datos)
 counts_matrix <- as.matrix(counts_df)
 
-#Hago clustering para ver los dos grupos
-counts_dfT<-as.data.frame(t(counts_df))
-kmedioids2 <- pam(counts_dfT,2)
-#CLUSTERING No ejecutar tarda mucho
-fviz_nbclust(normalized_counts, FUNcluster=hcut, k.max = 5, method = "wss")
-#Guardo un array de los clusters
+
+#Hacemos clustering usando la función pam() para ver los grupos
+kmedioids2 <- pam(datos,2)
+
+
+#Guardamos en una nueva variable, un array de los clusters recien creados
 counts_clustering<-kmedioids2[["clustering"]]
-#Creo un dataframe con los clusters y genes
+
+#Creo un dataframe con el conjunto de datos agrupado
 meta <- data.frame(sample=colnames(counts_matrix), sample_type = counts_clustering)
+
 dds <- DESeq2::DESeqDataSetFromMatrix(countData = counts_matrix, colData = meta, design = ~ sample_type)
 dds <- DESeq2::DESeq(dds)
-normalized_counts <- as.data.frame(DESeq2::counts(dds, normalized=TRUE)) # Getting normalized values
-#Sustituyo valores perdidos por la media
+
+#Normalizamos los valores 
+normalized_counts <- as.data.frame(DESeq2::counts(dds, normalized=TRUE)) 
+
+#Sustituyo valores perdidos (0) por la media de la columna a la que pertenece y creamos un nuevo dataframe
 transformToMean <- function(x){
   ifelse(x == 0, round(mean(x), 2), x)
 }
-normalized_counts_no_Na=data.frame(sapply(normalized_counts,transformToMean))
-#Pongo nombres a las filas con cada gen
+
+normalized_counts_no_Na<-data.frame(sapply(normalized_counts,transformToMean))
+
+#Reorganizamos los nombres de las filas
 rownames(normalized_counts_no_Na) <- rownames(counts_df)
-#Hago la transpuesta
 normalized_counts_no_NaT<-as.data.frame(t(normalized_counts_no_Na))
 
-sampleTree <- hclust(dist(normalized_counts_no_NaT), method = "average")
-# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
-# The user should change the dimensions if the window is too large or too small.
-sizeGrWindow(12,9)
+##MASFACIL##
+datos_normalizados<-normalized_counts_no_NaT
+
+##CLUSTERING
+
+#Aplicamos clustering usando la funcion hclust() con el linkage average
+sampleTree <- hclust(dist(datos_normalizados), method = "average")
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Creamos un pdf del arbol que muestra el clustering realizado
 pdf(file = "1_SampleClustering.pdf", width = 12, height = 9)
 par(cex = 0.6)
 par(mar = c(3,4,2,2))
 plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
      cex.axis = 1.5, cex.main = 2)
-#PONEMOS LA LINEA
-abline(h = 790000, col = "red")##linea roja que separa para identificar los outliers
+abline(h = 100, col = "red")#linea roja que separa para identificar los outliers
 dev.off()
+#setwd(workingDir)
+#getwd()
 
 
 
-
-#Uno los clusters a cada gen
-normalized_counts_no_Na_cluster<-cbind(Cluster=as.factor(counts_clustering),normalized_counts_no_NaT)
-# Divido el dataset dependiendo del cluster
-data<-split(normalized_counts_no_Na_cluster, f = normalized_counts_no_Na_cluster$Cluster)
+#Uno las columnas que indican el cluster al que pertenecen
+datos_normalizados_cluster<-cbind(Cluster=as.factor(counts_clustering),datos_normalizados)
+data<-split(datos_normalizados_cluster, f = datos_normalizados_cluster$Cluster)
 cluster1data<-as.data.frame(data[["1"]])
 cluster2data<-as.data.frame(data[["2"]])
+
 # Elimino la variable cluster, ya que estan los datos divididos y no sirven para nada
-library(dplyr)
 cluster1data <- select(cluster1data, -Cluster)
 cluster2data <- select(cluster2data, -Cluster)
-#normalizacion datos clusters
 
-# Una vez tenemos el dataset dividido y normalizado ya podemos utilizar el WGCNA
-library(WGCNA)
-library(DCGL)
+
+#Subdividimos los dos conjuntos de datos en un mismo numero de objetos para poder aplicar el análisis de coexpresion de genes.  
+
 #cluster1
 exprs.1<-cluster1data[1:6,]
 exprs.2<-cluster1data[7:12,]
@@ -86,7 +126,6 @@ exprs.12<-cluster2data[43:48,]
 exprs.13<-cluster2data[49:54,]
 
 
-#SI SOLO TOMARAMOS EN EXPRESIONES CON UNA CONDICION O CLUSTER1 O CLUSTER 2 PARA NO JUNTAR:
 expresion3<-rbind(exprs.1,exprs.2,exprs.3,exprs.4)
 expresion4<-rbind(exprs.5,exprs.6,exprs.7,exprs.8)
 expresion5<-rbind(exprs.6,exprs.7,exprs.8,exprs.9)
@@ -96,28 +135,16 @@ expresion8<-rbind(exprs.9,exprs.10,exprs.11,exprs.12)
 expresion9<-rbind(exprs.10,exprs.11,exprs.12,exprs.13)
 
 
-#Aquí lo que hacemos es observar para seleccionar loe genes coexpresados  deferenciales según el analisis
-#de red de coexpresión generica ponderada (WGCNA)
+##### ANALISIS DE COEXPRESIÓN USANDO EL PAQUETE WGCNA #####
 
-#WGCNA.res1 <- WGCNA(exprs.1=expresion1, exprs.2=expresion2, power = 12, variant = "WGCNA")
-#WGCNA.res1[1:6]
-#Links <- qLinkfilter(expresion1, expresion2, 0.25)
-#names(Links)
-#Links$rth contienen los dos umbrales de correlación para ambas condiciones;
-#Ambos Links$cor.filtered. mantienen las matrices de correlación filtradas para las condiciones A y B.
-#Vemos los umbrales de correlación:
-#umbral_ex1<-Links$rth.1
-#vemos que tiene una correlacion de 0.803
-#umbral_ex2<-Links$rth.2
-# tiene una correlacion de 0.527
-library(WGCNA)
+#Usamos la funcion WGCNA para elegir los genes de mayor correlación
 
 WGCNA.res2 <- WGCNA(exprs.1=expresion3, exprs.2=expresion4, power = 12, variant = "WGCNA")
 WGCNA.res2[1:24]
 Links2 <- qLinkfilter(expresion3, expresion4, 0.25)
 names(Links2)
 umbral_ex3<-Links2$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.994
 umbral_ex4<-Links2$rth.2
 #vemos que tiene una correlacion de 0.997
 
@@ -127,18 +154,18 @@ WGCNA.res3[1:24]
 Links3 <- qLinkfilter(expresion3, expresion5, 0.25)
 names(Links3)
 umbral_ex3<-Links3$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.99441
 umbral_ex5<-Links3$rth.2
-#vemos que tiene una correlacion de 0.9828
+#vemos que tiene una correlacion de 0.9833
 
 WGCNA.res4 <- WGCNA(exprs.1=expresion3, exprs.2=expresion6, power = 12, variant = "WGCNA")
 WGCNA.res4[1:24]
 Links4 <- qLinkfilter(expresion3, expresion6, 0.25)
 names(Links4)
 umbral_ex3<-Links4$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.99441
 umbral_ex6<-Links4$rth.2
-#Vamos que tiene una correlacion de 0.9303
+#Vamos que tiene una correlacion de 0.9291
 
 
 WGCNA.res5 <- WGCNA(exprs.1=expresion3, exprs.2=expresion7, power = 12, variant = "WGCNA")
@@ -146,9 +173,9 @@ WGCNA.res5[1:24]
 Links5 <- qLinkfilter(expresion3, expresion7, 0.25)
 names(Links5)
 umbral_ex3<-Links5$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.99441
 umbral_ex7<-Links5$rth.2
-#Vamos que tiene una correlacion de 0.990209
+#Vamos que tiene una correlacion de 0.990
 
 
 WGCNA.res6 <- WGCNA(exprs.1=expresion3, exprs.2=expresion8, power = 12, variant = "WGCNA")
@@ -156,141 +183,160 @@ WGCNA.res6[1:24]
 Links6 <- qLinkfilter(expresion3, expresion8, 0.25)
 names(Links6)
 umbral_ex3<-Links6$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.99441
 umbral_ex8<-Links6$rth.2
-#Vamos que tiene una correlacion de 0.9964594
+#Vamos que tiene una correlacion de 0.996
 
 WGCNA.res7 <- WGCNA(exprs.1=expresion3, exprs.2=expresion9, power = 12, variant = "WGCNA")
 WGCNA.res7[1:24]
 Links7 <- qLinkfilter(expresion3, expresion9, 0.25)
 names(Links7)
 umbral_ex3<-Links7$rth.1
-#vemos que tiene una correlacion de 0.9946
+#vemos que tiene una correlacion de 0.99441
 umbral_ex9<-Links7$rth.2
-#Vamos que tiene una correlacion de 0.391231
+#Vamos que tiene una correlacion de 0.0569
+
+#no ponemos la expresion 9 porque tiene una correlacion de 0.05
+datos_expresiones<-rbind(expresion3,expresion4,expresion7,expresion8)
 
 
-####POR LO QUE PODEMOS LLEGAR A LA CONCLUSIÓN QUE LOS QUE DEL CLUSTER 1 DEBEMOS USAR LA EXPRESION 3 
-####Y DEL CLUSTER 2 DEBERIAMOS USAR LA EXPRESION 4 QUE ES LA QUE MAYOR CORRELACION TIENE
-
-datos_expresiones<-rbind(expresion3,expresion4,expresion8,expresion7,expresion5,expresion6)
-
-####network constr#######
+####CONSTRUCCIÓN RED TOPOLÓGICA#####
 enableWGCNAThreads()
 
-# Choose a set of soft-thresholding powers
+# Escogemos un conjunto de soft-thresholding powers
 powers <- c(1:30)
 
-# Call the network topology analysis function
+# Función de análisis de red topológica
 sft <- pickSoftThreshold(datos_expresiones, powerVector = powers, verbose = 5)
-# Plot the results:
-#sizeGrWindow(9, 5)
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Creamos un pdf donde se vea la red topológica en libre escala
 pdf(file="2_Scale independence.pdf",width=9,height=5)
 par(mfrow = c(1,2))
 cex1 = 0.9
-
 plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
      main = paste("Scale independence"));
 text(sft$fitIndices[,1], -sign(sft$fitIndices[,3])*sft$fitIndices[,2],
      labels=powers,cex=cex1,col="red");
-# this line corresponds to using an R^2 cut-off of h
-abline(h=0.90,col="red")
-# Mean connectivity as a function of the soft-thresholding power
+
+abline(h=0.90,col="red")#esta línea corresponde a usar un corte R ^ 2 de h
+#Conectividad media en función de la potencia de soft-thresholding
 plot(sft$fitIndices[,1], sft$fitIndices[,5],
      xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
      main = paste("Mean connectivity"))
 text(sft$fitIndices[,1], sft$fitIndices[,5], labels=powers, cex=cex1,col="red")
 dev.off()
+#setwd(workingDir)
+#getwd()
 
 
-######chose the softPower
-
-
+#Escoger el softPower
 softPower <-sft$powerEstimate
+
+#Hallamos la adyacencia
 adjacency <- adjacency(datos_expresiones, power = softPower)
 
-memory.limit(size = 35000)#para problema de memoria
-##### Turn adjacency into topological overlap
-TOM <- TOMsimilarity(adjacency);
+# Convertimos la adyacencia en TOM ( Matriz Topológica de Superposición)
+TOM<-TOMsimilarity(adjacency)
 dissTOM <- 1-TOM
-rm(adjacency)#eliminar adjagency.
-# Call the hierarchical clustering function
-geneTree <- hclust(as.dist(dissTOM), method = "average")
-#hc <- eclust(datos,FUNcluster = "hclust", k = i, hc_metric = d , hc_method = l)
-# Plot the resulting clustering tree (dendrogram)
 
-#sizeGrWindow(12,9)
+
+# Aplicamos clustering usando la funcion hclust() con el linkage average
+geneTree <- hclust(as.dist(dissTOM), method = "average")
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Creamos un pdf donde nos muestr ese Clusterin basado en la no similitud
 pdf(file="3_Gene clustering on TOM-based dissimilarity.pdf",width=12,height=9)
 plot(geneTree, xlab="", sub="", main = "Gene clustering on TOM-based dissimilarity",
      labels = FALSE, hang = 0.04)
 dev.off()
+setwd(workingDir)
+getwd()
 
+#Según lo visto en los pdfs anteriores queremos que el tamaño minimo del módulo de esos clusters sean 6 (un numero relativamente alto conforme a las particiones posibles)
+minModuleSize <- 5
 
-# We like large modules, so we set the minimum module size relatively high:
-minModuleSize <- 6
-# Module identification using dynamic tree cut:
+#Identificación del módulo mediante corte de árbol dinámico:
 dynamicMods <- cutreeDynamic(dendro = geneTree, distM = dissTOM,
                             deepSplit = 2, pamRespectsDendro = FALSE,
                             minClusterSize = minModuleSize);
 table(dynamicMods)
 #como vemos mayoritariamente va a haber gris porque hay 21622
-# Convert numeric lables into colors
+
+# Convertir etiquetas numéricas en colores
 dynamicColors <- labels2colors(dynamicMods)
 table(dynamicColors)
-# Plot the dendrogram and colors underneath
-#sizeGrWindow(8,6)
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Hacemos un pdf donde se haga el dendrograma y los colores debajo
 pdf(file="4_Dynamic Tree Cut.pdf",width=8,height=6)
 plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut",
                     dendroLabels = FALSE, hang = 0.03,
                     addGuide = TRUE, guideHang = 0.05,
                     main = "Gene dendrogram and module colors")
 dev.off()
+setwd(workingDir)
+getwd()
 
-##CALCULAMOS EL GEN PROPIO
+#gen propio
 MEList <- moduleEigengenes(datos_expresiones, colors = dynamicColors)
 MEs <- MEList$eigengenes
-# Calculate dissimilarity of module eigengenes
-MEDiss <- 1-cor(MEs);
+
+# Calcular la disimilitud de los genes propios del módulo
+MEDiss <- 1-cor(MEs)
+
 # Cluster module eigengenes
 METree <- hclust(as.dist(MEDiss), method = "average")
-# Plot the result
-#sizeGrWindow(7, 6)
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Creamos un pdf  que muestra el clustering realizado según el árbol de modulos de los genes
 pdf(file="5_Clustering of module eigengenes.pdf",width=7,height=6)
 plot(METree, main = "Clustering of module eigengenes",
      xlab = "", sub = "")
 MEDissThres = 0.2
-# Plot the cut line into the dendrogram
-abline(h=MEDissThres, col = "red")
+abline(h=MEDissThres, col = "red")# h= va a ser la línea que corte el dendrograma
 dev.off()
+setwd(workingDir)
+getwd()
 
-# Call an automatic merging function
+
+#Llamada a una funcion merge que lo que nos permite es unir los datos expresiones con los colores antes hallados
 merge <- mergeCloseModules(datos_expresiones, dynamicColors, cutHeight = MEDissThres, verbose = 3)
-# The merged module colors
+
+# Colores que hay en la función merge anteruir
 mergedColors <- merge$colors
-# Eigengenes of the new merged modules:
+
+# Genes propios de los nuevos módulos fusionados:
 mergedMEs <-merge$newMEs
-#sizeGrWindow(12, 9)
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Hacemos un denodrograma y color con el árbol hallado anteriormente y los colores tanto dinamicos como en función merge
 pdf(file="6_Merged dynamic.pdf", width = 9, height = 6)
 plotDendroAndColors(geneTree, cbind(dynamicColors, mergedColors),
                     c("Dynamic Tree Cut", "Merged dynamic"),
                     dendroLabels = FALSE, hang = 0.03,
                     addGuide = TRUE, guideHang = 0.05)
 dev.off()
-#Observar los colores cambiados
+setwd(workingDir)
+getwd()
 
-# Rename to moduleColors
+
 moduleColors <- mergedColors
-# Construct numerical labels corresponding to the colors
+#Construimos etiquetas numéricas que correspondan a los colores
 colorOrder <- c("grey", standardColors(50))
+#Ponemos el grey porque es el que mas hay
 moduleLabels <- match(moduleColors, colorOrder)-1
 MEs <- mergedMEs
 
 
-#####
 nSamples<-nrow(datos_expresiones)
-
-### COVID 
+###p-valor COVID ######
 
 
 # names (colors) of the modules
@@ -303,13 +349,10 @@ names(geneModuleMembership) <- paste("COVID", modNames, sep="")
 names(COVIDPvalue) <- paste("p.COVID", modNames, sep="")
 
 
-#####EXPORT
+#####EXPORT####
 
 names(datos_expresiones)
 probes <- names(datos_expresiones)
-
-
-#################exprot COVID ############### 
 
 geneInfo0 = data.frame(probes= probes,
                        moduleColor = moduleColors)
@@ -326,64 +369,68 @@ for (mod in 1:ncol(geneModuleMembership))
 geneOrder <-order(geneInfo0$moduleColor)
 geneInfo <- geneInfo0[geneOrder, ]
 
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
 write.table(geneInfo, file = "7_COVID.xls",sep="\t",row.names=F)
 #Vemos el valor de los genes en las diferentes muestras
+setwd(workingDir)
+getwd()
 
-########VISUALIZAR RED GENES#################
 
-
+########VISUALIZAR RED GENES MAPA DE CALOR #################
 nGenes <- ncol(datos_expresiones)
 nSamples <- nrow(datos_expresiones)
 
 
-# Transform dissTOM with a power to make moderately strong connections more visible in the heatmap
-#TOM = Matriz de superposición topológica (aclaracion)
-plotTOM <- dissTOM^7
-# Set diagonal to NA for a nicer plot
-diag(plotTOM) <- NA
-# Call the plot function
+# Transforma dissTOM con el power para hacer que las conexiones moderadamente fuertes sean más visibles en el mapa de calor
 
-#sizeGrWindow(9,9)
-memory.limit(size = 80000)#para problema de memoria
-pdf(file="8_Network heatmap plot_all gene.pdf",width=9, height=9,compress = FALSE)
-TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
+plotTOM <- dissTOM^2
+#Esto se pone para que quede un plot más estético
+diag(plotTOM) <- NA
+memory.limit(size = 9999999)
+
+
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+#getwd()
+#Creamos un pdf que nos muestre el mapa de calor
+pdf(file="8_Network heatmap plot_all gene.pdf",width=12, height=12,compress = FALSE)
+TOMplot(as.data.frame(plotTOM), geneTree, moduleColors, main = "Network heatmap plot, all genes")
 dev.off()
+setwd(workingDir)
+getwd()
 
 nSelect <- 400
-# For reproducibility, we set the random seed
 set.seed(10)
 select <- sample(nGenes, size = nSelect,replace = TRUE)
 selectTOM <- dissTOM[select, select]
-# There's no simple way of restricting a clustering tree to a subset of genes, so we must re-cluster.
+
+# No existe una forma sencilla de restringir un árbol de agrupamiento a un subconjunto de genes, por lo que debemos volver a agrupar.
 selectTree <- hclust(as.dist(selectTOM), method = "average")
 selectColors <- moduleColors[select]
 
-# Open a graphical window
-#sizeGrWindow(9,9)
-# Taking the dissimilarity to a power, say 10, makes the plot more informative by effectively changing
-# the color palette; setting the diagonal to NA also improves the clarity of the plot
+
+# Elevar la disimilitud a una potencia, digamos 7, hace que la trama sea más informativa al cambiar la paleta de colores; 
+#establecer la diagonal en NA también mejora la claridad de la trama
 plotDiss <- selectTOM^7
 diag(plotDiss) <- NA
 
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 pdf(file="9_Network heatmap plot_selected genes.pdf",width=9, height=9)
 TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
 dev.off()
 
 
-#########Visualizing the gene network of eigengenes#############
 
-
-#sizeGrWindow(5,7.5)
-
-#Dendrograma de genes propios y mapa de calor de adyacencia de genes propios
+#Creamos un pdf donde nos muestr el dendrograma de genes propios y mapa de calor de adyacencia de genes propios
 pdf(file="10_Eigengene dendrogram and Eigengene adjacency heatmap.pdf", width=5, height=7.5)
 par(cex = 0.9)
 plotEigengeneNetworks(MEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle= 90)
 dev.off()
 
-#or devide into two parts
-# Plot the dendrogram
-#sizeGrWindow(6,6);
+
+
+#Aunque tambien lo podemos dividir en 2 partes:
 pdf(file="11_Eigengene dendrogram_2.pdf",width=6, height=6)
 par(cex = 1.0)
 plotEigengeneNetworks(MEs, "Eigengene dendrogram", marDendro = c(0,4,2,0), plotHeatmaps = FALSE)
@@ -392,29 +439,32 @@ dev.off()
 #Mapa de calor de adyacencia de genes propios
 
 pdf(file="12_Eigengene adjacency heatmap_2.pdf",width=6, height=6)
-# Plot the heatmap matrix (note: this plot will overwrite the dendrogram plot)
+# Hace la matriz del mapa de calor (nota: este gráfico sobrescribirá el gráfico de dendrograma)
 par(cex = 1.0)
 plotEigengeneNetworks(MEs, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2), plotDendrograms = FALSE, xLabelsAngle = 90)
 dev.off()
+setwd(workingDir)
+getwd()
 
-
-###########################Exporting to Cytoscape all one by one ##########################
-# Select each module
-
+#######################CYTOSCAPE##########################
+# Hacemos una funcion que seleccione cada uno de los modulos de color
+#memory.limit(size = 120000)
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 for (mod in 1:nrow(table(moduleColors)))
 {
   
   modules <- names(table(moduleColors))[mod]
-  # Select module probes
+  #Seleccionamos los modulos de las sondas(probes)
   probes <- names(datos_expresiones)
   inModule <- (moduleColors == modules)
   modProbes <- probes[inModule]
   modGenes <- modProbes
-  # Select the corresponding Topological Overlap
+  # Seleccionamos la superposición topológica correspondiente
   modTOM <- TOM[inModule, inModule]
   
   dimnames(modTOM) <- list(modProbes, modProbes)
-  # Export the network into edge and node list files Cytoscape can read
+  #Exportamos la red a archivos de lista de nodos y de borde que Cytoscape puede leer 
   cyt <- exportNetworkToCytoscape(modTOM,
                                  edgeFile = paste("CytoscapeInput-edges-", modules , ".txt", sep=""),
                                  nodeFile = paste("CytoscapeInput-nodes-", modules, ".txt", sep=""),
@@ -425,33 +475,31 @@ for (mod in 1:nrow(table(moduleColors)))
                                  nodeAttr = moduleColors[inModule])
 }
 
-BiocManager ::install ("coexnet")
-library(coexnet)
-library(tidyverse)
 
-# Building the network
-#dataC<-geneInfo0[,-c(1:2)]
-#memory.limit(size = 120000)#hay que aumentar el espacio de memoria
 
-#cor_pearson <- createNet(expData = dataC,threshold = 0.99,method = "correlation")
-#plot(cor_pearson)
-#jpeg("cor_pearson.jpeg")
-#plot(cor_pearson)
-#dev.off()
+# Constuimos la red
 
 cor_pearson1 <- createNet(expData = datos_expresiones,threshold = 1,method = "correlation")
 plot(cor_pearson1)
 jpeg("cor_pearson.jpeg")
 plot(cor_pearson1)
 dev.off()
+setwd(workingDir)
+getwd()
 
-dataC1<-dataC
-complete <- cofVar(dataC1)
 
+#para hacer un boxplot
+
+complete <- cofVar(datos_expresiones)
+#setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 pdf(file="13_Boxplot.pdf",width=6, height=6)
-boxplot(dataC1, main="Boxplot groups")
+boxplot(complete, main="Boxplot groups")
 dev.off()
+setwd(workingDir)
+getwd()
 vb<-boxplot(dataC1)
 vb$out
-#Esto ultimo lo hacemos para ver los valores atípicos
+#vemos así los valor atípicos que son 1000
+
 

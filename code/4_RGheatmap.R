@@ -1,14 +1,9 @@
-
 args = commandArgs(trailingOnly = TRUE)
-wd <- args[1]
-software_deps <- args[2]
-results <- args[3]
+wd <- args[2]
+software_deps <- args[3]
+results <- args[4]
 
-#results <- "D:/uni/2020-21/BiologiaSistemas/Practicas/Aurelio/trabajoFinal/Git/project_template_BS_SARS-CoV2/results"
-#wd <- "D:/uni/2020-21/BiologiaSistemas/Practicas/Aurelio/trabajoFinal/Git/project_template_BS_SARS-CoV2/code"
 setwd(wd)
-
-#options(stringsAsFactors = FALSE)
 
 source(paste(wd, "3_RedTopologica.R", sep = "/"))
 

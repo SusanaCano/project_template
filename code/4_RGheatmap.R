@@ -1,21 +1,24 @@
 ########VISUALIZAR RED GENES MAPA DE CALOR #################
-
-
 nGenes <- ncol(datos_expresiones)
 nSamples <- nrow(datos_expresiones)
 
 
 # Transforma dissTOM con el power para hacer que las conexiones moderadamente fuertes sean más visibles en el mapa de calor
 
-plotTOM <- dissTOM^7
+plotTOM <- dissTOM^2
 #Esto se pone para que quede un plot más estético
 diag(plotTOM) <- NA
-memory.limit(size = 80000)
+memory.limit(size = 9999999)
 
+
+setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 #Creamos un pdf que nos muestre el mapa de calor
-pdf(file="8_Network heatmap plot_all gene.pdf",width=9, height=9,compress = FALSE)
-TOMplot(plotTOM, geneTree, moduleColors, main = "Network heatmap plot, all genes")
+pdf(file="8_Network heatmap plot_all gene.pdf",width=12, height=12,compress = FALSE)
+TOMplot(as.data.frame(plotTOM), geneTree, moduleColors, main = "Network heatmap plot, all genes")
 dev.off()
+setwd(workingDir)
+getwd()
 
 nSelect <- 400
 set.seed(10)
@@ -32,15 +35,20 @@ selectColors <- moduleColors[select]
 plotDiss <- selectTOM^7
 diag(plotDiss) <- NA
 
+setwd("C:/Users/Mariana/Documents/GitHub/project_template_BS_SARS-CoV2/results")
+getwd()
 pdf(file="9_Network heatmap plot_selected genes.pdf",width=9, height=9)
 TOMplot(plotDiss, selectTree, selectColors, main = "Network heatmap plot, selected genes")
 dev.off()
+
+
 
 #Creamos un pdf donde nos muestr el dendrograma de genes propios y mapa de calor de adyacencia de genes propios
 pdf(file="10_Eigengene dendrogram and Eigengene adjacency heatmap.pdf", width=5, height=7.5)
 par(cex = 0.9)
 plotEigengeneNetworks(MEs, "", marDendro = c(0,4,1,2), marHeatmap = c(3,4,1,2), cex.lab = 0.8, xLabelsAngle= 90)
 dev.off()
+
 
 
 #Aunque tambien lo podemos dividir en 2 partes:
@@ -56,3 +64,5 @@ pdf(file="12_Eigengene adjacency heatmap_2.pdf",width=6, height=6)
 par(cex = 1.0)
 plotEigengeneNetworks(MEs, "Eigengene adjacency heatmap", marHeatmap = c(3,4,2,2), plotDendrograms = FALSE, xLabelsAngle = 90)
 dev.off()
+setwd(workingDir)
+getwd()

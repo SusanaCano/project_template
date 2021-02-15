@@ -2,6 +2,7 @@ This is BibTeX, Version 0.99d (TeX Live 2020)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: report.aux
 The style file: bmc-mathphys.bst
+I found no \citation commands---while reading file report.aux
 Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
@@ -25,44 +26,45 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-You've used 6 entries,
+You've used 0 entries,
             7128 wiz_defined-function locations,
-            1161 strings with 9752 characters,
-and the built_in function-call counts, 126541 in all, are:
-= -- 24137
-> -- 135
-< -- 76
-+ -- 15419
-- -- 45
-* -- 2599
-:= -- 21796
-add.period$ -- 7
-call.type$ -- 6
-change.case$ -- 59
-chr.to.int$ -- 147
-cite$ -- 6
-duplicate$ -- 454
-empty$ -- 1039
-format.name$ -- 106
-if$ -- 32853
+            1121 strings with 9048 characters,
+and the built_in function-call counts, 124 in all, are:
+= -- 0
+> -- 0
+< -- 0
++ -- 0
+- -- 0
+* -- 2
+:= -- 14
+add.period$ -- 0
+call.type$ -- 0
+change.case$ -- 0
+chr.to.int$ -- 0
+cite$ -- 0
+duplicate$ -- 0
+empty$ -- 1
+format.name$ -- 0
+if$ -- 1
 int.to.chr$ -- 1
-int.to.str$ -- 15
-missing$ -- 182
-newline$ -- 196
-num.names$ -- 36
-pop$ -- 230
+int.to.str$ -- 1
+missing$ -- 0
+newline$ -- 54
+num.names$ -- 0
+pop$ -- 0
 preamble$ -- 1
-purify$ -- 26
-quote$ -- 12
-skip$ -- 14771
+purify$ -- 0
+quote$ -- 0
+skip$ -- 1
 stack$ -- 0
-substring$ -- 11311
-swap$ -- 123
-text.length$ -- 101
+substring$ -- 0
+swap$ -- 0
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 241
+type$ -- 0
 warning$ -- 0
-while$ -- 185
+while$ -- 0
 width$ -- 0
-write$ -- 226
+write$ -- 48
+(There was 1 error message)

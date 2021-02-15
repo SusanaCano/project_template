@@ -14,6 +14,10 @@
 \usepackage[utf8]{inputenc} %unicode support
 %\usepackage[applemac]{inputenc} %applemac support if unicode package fails
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
+\usepackage[section]{placeins}
+\usepackage{float}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,27 +47,27 @@
 			\author[
 			  addressref={aff1},                   % ESTA LINEA SE COPIA IGUAL PARA CADA AUTOR
 			  corref={aff1},                       % ESTA LINEA SOLO DEBE TENERLA EL COORDINADOR DEL GRUPO
-			  email={jane.e.doe@cambridge.co.uk}   % VUESTRO CORREO ACTIVO
+			  email={scm8u7j@uma.es}   % VUESTRO CORREO ACTIVO
 			]{\inits{S.C.M}\fnm{Susana} \snm{Cano Marín}} % inits: INICIALES DE AUTOR, fnm: NOMBRE DE AUTOR, snm: APELLIDOS DE AUTOR
 			\author[
 			  addressref={aff1},
-			  email={john.RS.Smith@cambridge.co.uk}
+			  email={}
 			]{\inits{J.S.R.}\fnm{Juan} \snm{Sánchez Rodríguez}}
 			
 			\author[
 			addressref={aff1},
 			email={laurafg98@uma.es}
-			]{\inits{J.S.R.}\fnm{Laura} \snm{Fernández García}}
+			]{\inits{L.F.G}\fnm{Laura} \snm{Fernández García}}
 			
 			\author[
 			addressref={aff1},
-			email={laurafg98@uma.es}
-			]{\inits{J.S.R.}\fnm{Mariana} \snm{Gonzalez}}
+			email={marianagjimenez17@gmail.com}
+			]{\inits{M.G.J.}\fnm{Mariana} \snm{Gonzalez Jimenez}}
 			
 			\author[
 			addressref={aff1},
-			email={laurafg98@uma.es}
-			]{\inits{J.S.R.}\fnm{Ana} \snm{}}
+			email={lannagalia7@gmail.com}
+			]{\inits{A.G.C}\fnm{Ana} \snm{Galiá Caravaca}}
 			
 			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			%% AFILIACION. NO TOCAR                     %%
@@ -82,135 +86,24 @@
 		
 			\begin{abstract} % abstract
 			
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			%% RESUMEN BREVE DE NO MAS DE 100 PALABRAS   %%
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
+			\noindent En este proyecto realizaremos la coexpresión génica de los datos obtenidos a partir de muestras de células epiteliales de pulmón de diferentes pacientes. De esta forma, estudiaremos la respuesta de estas células a la infección por SARS-CoV2 usando el paquete de R "WGCNA".
+			
 			
 			\end{abstract}
 			
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			%% PALABRAS CLAVE DEL PROYECTO              %%
-			%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-			
 			\begin{keyword}
-			\kwd{sample}
-			\kwd{article}
-			\kwd{author}
+			\kwd{COVID-19}
+			\kwd{SARS-CoV2}
+			\kwd{coexpresión de genes}
+			\kwd{epitelio}
+			\kwd{pulmón}
 			\end{keyword}
 		
 		
 		\end{abstractbox}
 	
 	\end{frontmatter}
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% EJEMPLO DE LATEX %%                                                                %%
-	%% BORRAR ANTES DE ENTREGAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!              %%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	\section*{Content}
-		Text and results for this section, as per the individual journal's instructions for authors. Here, we reference the figure \ref{fig:cost_genome} and figure \ref{fig:cost_megabase} but also the table \ref{tab:ejemplo}.
-	
-	\section*{Section title}
-		Text for this section\ldots
 
-		In this section we examine the growth rate of the mean of $Z_0$, $Z_1$ and $Z_2$. In
-		addition, we examine a common modeling assumption and note the
-		importance of considering the tails of the extinction time $T_x$ in
-		studies of escape dynamics.
-		We will first consider the expected resistant population at $vT_x$ for
-		some $v>0$, (and temporarily assume $\alpha=0$)
-		%
-		\[
-		E \bigl[Z_1(vT_x) \bigr]=
-		\int_0^{v\wedge
-			1}Z_0(uT_x)
-		\exp (\lambda_1)\,du .
-		\]
-		%
-		If we assume that sensitive cells follow a deterministic decay
-		$Z_0(t)=xe^{\lambda_0 t}$ and approximate their extinction time as
-		$T_x\approx-\frac{1}{\lambda_0}\log x$, then we can heuristically
-		estimate the expected value as
-		%
-		\begin{equation}\label{eqexpmuts}
-			\begin{aligned}[b]
-				&      E\bigl[Z_1(vT_x)\bigr]\\
-				&\quad      = \frac{\mu}{r}\log x
-				\int_0^{v\wedge1}x^{1-u}x^{({\lambda_1}/{r})(v-u)}\,du .
-			\end{aligned}
-		\end{equation}
-		%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		%% USAR \cite{...} PARA INCLUIR REFERENCIAS BIBLIOGRAFICAS          %%
-		%%  \cite{koon}  Para una sola                                      %%
-		%%  \cite{oreg,khar,zvai,xjon,schn,pond} Para una lista             %%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		Thus we observe that this expected value is finite for all $v>0$ (also see \cite{koon,xjon,marg,schn,koha,issnic}).
-		
-		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		%% FIGURAS                                                                               %%
-		%% includegraphics: inserta la imagen                                                    %%
-		%% caption: descripcion de la figura                                                     %%
-		%% label: etiqueta para hacer referencia a la figura en el texto con la instrucción ref  %%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	
-		
-		\begin{figure}[h!]
-			\includegraphics[width=0.9\textwidth]{figures/Sequencing_Cost_per_Genome_May2020.jpg}
-			\caption{Sample figure title}
-			\label{fig:cost_genome}
-		\end{figure}
-		
-		\begin{figure}[h!]
-			\includegraphics[width=0.9\textwidth]{figures/Sequencing_Cost_per_Megabase_May2020.jpg}
-			\caption{Sample figure title}
-			\label{fig:cost_megabase}
-		\end{figure}
-		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		%% TABLAS                                                                               %%
-		%% caption: Descripción tabla                                                           %%
-		%% \begin{tabular}{letras}: Indica numero de columnas.                                  %%
-		%%    Una letra por columna, la letra indica la alineación de la columna:               %%
-		%%    c center, l left, r right                                                         %%
-		%% hline: Representa una linea como entre filas                                         %%
-		%% \\: fin de fila                                                                      %%
-		%% &: delimitador de celda                                                              %%
-		%% label: etiqueta para hacer referencia a la tabla en el texto con la instrucción ref  %%
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		
-		\begin{table}[h!]
-			\caption{Sample table title. This is where the description of the table should go}
-			\begin{tabular}{cccc}
-				\hline
-				& B1  &B2   & B3\\ 
-				\hline
-				A1 & 0.1 & 0.2 & 0.3\\
-				A2 & ... & ..  & .\\
-				A3 & ..  & .   & .\\ 
-				\hline
-				\label{tab:ejemplo}
-			\end{tabular}
-		\end{table}
-				
-		\subsection*{Sub-heading for section}
-			Text for this sub-heading\ldots
-	
-			\subsubsection*{Sub-sub heading for section}
-				Text for this sub-sub-heading\ldots
-					
-					\paragraph*{Sub-sub-sub heading for section}
-						Text for this sub-sub-sub-heading\ldots
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% FIN DE EJEMPLO !!!!!!!!!!!! %%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%% COMIENZO DEL DOCUMENTO REAL %%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
 	\input{tex_files/introduction.tex}
 	\input{tex_files/material_methods.tex}
 	\input{tex_files/resultados.tex}
@@ -225,15 +118,21 @@
 	\begin{backmatter}
 	
 		\section*{Abreviaciones}%% if any
-			Indicar lista de abreviaciones mostrando cada acrónimo a que corresponde
+			SARS: Síndrome Agudo Respiratorio Severo
+			
+			COVID: Coronavirus Disease
+			
+			ACE2: Célula epitelial
 		
 		\section*{Disponibilidad de datos y materiales}%% if any
 			Debéis indicar aquí un enlace a vuestro repositorio de github.
 		
 		\section*{Contribución de los autores}
-			Usando las iniciales que habéis definido al comienzo del documento, debeis indicar la contribución al proyecto en el estilo:
-			J.E : Encargado del análisis de coexpresión con R, escritura de resultados; J.R.S : modelado de red con python y automatizado del código, escritura de métodos; ...
-			OJO: que sea realista con los registros que hay en vuestros repositorios de github. 
+			S.C.M: Flujo de trabajo en bash, organización, coordinación y revisión de código.\\
+			J.S.R: Código, bibliografía y redacción.\\
+			A.G.C: Flujo de trabajo en bash, redacción y organización.\\
+			M.G.J: Código y redacción.\\
+			L.F.G: Código y redacción.\\
 		
 		
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,6 +142,47 @@
 		
 		\bibliographystyle{bmc-mathphys} % Style BST file (bmc-mathphys, vancouver, spbasic).
 		\bibliography{bibliography}      % Bibliography file (usually '*.bib' )
+		
+		\begin{enumerate}
+		
+			\item Bioconductor - coexnet. (n.d.). Retrieved February 14, 2021, from https://bioconductor.org/packages/release/bioc/html/coexnet.html
+			
+			\item Bioconductor - DESeq2. (n.d.). Retrieved February 14, 2021, from https://bioconductor.org/packages/release/bioc/html/DESeq2.html
+			
+			\item Bioconductor - RTCGAToolbox. (n.d.). Retrieved February 14, 2021, from https://bioconductor.org/packages/release/bioc/html/RTCGAToolbox.html
+			
+			\item Blanco-Melo, D., Nilsson-Payant, B. E., Liu, W. C., Møller, R., Panis, M., Sachs, D., Albrecht, R. A., \& tenOever, B. R. (2020). SARS-CoV-2 launches a unique transcriptional signature from in vitro, ex vivo, and in vivo systems. In bioRxiv. bioRxiv. https://doi.org/10.1101/2020.03.24.004655
+			
+			\item factoextra package | R Documentation. (n.d.). Retrieved February 14, 2021, from https://www.rdocumentation.org/packages/factoextra/versions/1.0.3
+			
+			\item Función NbClust | Documentación R. (n.d.). Retrieved February 14, 2021, from https://www.rdocumentation.org/packages/NbClust/versions/3.0/topics/NbClust
+			
+			\item Lokugamage, K. G., Yoshikawa-Iwata, N., Ito, N., Watts, D. M., Wyde, P. R., Wang, N., Newman, P., Kent Tseng, C. Te, Peters, C. J., \& Makino, S. (2008). Chimeric coronavirus-like particles carrying severe acute respiratory syndrome coronavirus (SCoV) S protein protect mice against challenge with SCoV. Vaccine, 26(6), 797–808. https://doi.org/10.1016/j.vaccine.2007.11.092
+			
+			\item Love, M. I., Huber, W., \& Anders, S. (2014). Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology, 15(12). https://doi.org/10.1186/s13059-014-0550-8
+			
+			\item paquete dplyr | Documentación R. (n.d.). Retrieved February 14, 2021, from https://www.rdocumentation.org/packages/dplyr/versions/0.7.8
+			
+			\item Peter Langfelder, A., Hor-, S., Cai, C., Dong, J., Miller, J., Song, L., Yip, A., \& Zhang Maintainer Peter Langfelder, B. (2020). Package “WGCNA” Title Weighted Correlation Network Analysis. https://doi.org/10.2202/1544
+			
+			\item Pinto, B. G. G., Oliveira, A. E. R., Singh, Y., Jimenez, L., Gonçalves, A. N. A., Ogava, R. L. T., Creighton, R., Peron, J. P. S., \& Nakaya, H. I. (2020). ACE2 expression is increased in the lungs of patients with comorbidities associated with severe COVID-19. In medRxiv. medRxiv. https://doi.org/10.1101/2020.03.21.20040261
+			
+			\item Respuesta inflamatoria y apoptosis en la lesión pulmonar aguda. (n.d.). Retrieved February 14, 2021, from http://scielo.isciii.es/scielo.php?script=sci\_arttext\&pid=S0210-56912006000600003
+			
+			\item RPubs - Identifying Coexpressed Genes. (n.d.). Retrieved February 15, 2021, from https://rpubs.com/mikelapika/491660
+			
+			
+			\item RPubs - WGCNA Tutorial. (n.d.). Retrieved February 15, 2021, from https://rpubs.com/natmurad/WGCNA
+			
+			\item WGCNA/script\_WGCNAwithoutTrait.R at master · paytonyau/WGCNA. (n.d.). Retrieved February 15, 2021, from https://github.com/paytonyau/WGCNA/blob/master/script\_WGCNAwithoutTrait.R
+			
+			
+			\item Yang, J., Yu, H., Liu, B.-H., Zhao, Z., Liu, L., Ma, L.-X., Li, Y.-X., Li, Y.-Y., Bao, M., \& Liu, H. (2015). Package “DCGL” Type Package Title Differential Co-expression Analysis and Differential Regulation Analysis of Gene Expression Microarray Data. https://doi.org/10.1371/journal.pone.0079729
+			
+			\item Zhang, B., \& Horvath, S. (2005). A general framework for weighted gene co-expression network analysis. Statistical Applications in Genetics and Molecular Biology, 4(1). https://doi.org/10.2202/1544-6115.1128
+			
+			
+		\end{enumerate}
 	
 	\end{backmatter}
 \end{document}

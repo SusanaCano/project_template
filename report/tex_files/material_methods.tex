@@ -1,9 +1,12 @@
+	
+
+	\newpage
 
 	\section{Materiales y métodos}
 	
-	Para llevar a cabo el modelado de redes de coexpresión génica se ha utilizado el lenguaje R mediante el entorno RStudio. El análisis de coexpresión es un método de biología de sistemas utilizado para decribir los patrones de correlación entre genes en muestras de microarrays. Las redes de correlación facilitan los métodos de cribado de genes basados en redes que se pueden utilizar para identificar posibles biomarcadores o dianas terapeuticas. A continuación, mostraremos y explicaremos los paquetes y funciones esenciales usados para llevar a cabo la realización de nuestro estudio.
+	\noindent Para llevar a cabo el modelado de redes de coexpresión génica se ha utilizado el lenguaje R mediante el entorno RStudio. El análisis de coexpresión es un método de biología de sistemas utilizado para decribir los patrones de correlación entre genes en muestras de microarrays. Las redes de correlación facilitan los métodos de cribado de genes basados en redes que se pueden utilizar para identificar posibles biomarcadores o dianas terapeuticas. A continuación, mostraremos y explicaremos los paquetes y funciones esenciales usados para llevar a cabo la realización de nuestro estudio. \\
 	
-	\underline{\bfseries{WGCNA}}: Esta es la librería utilizada y en la que nos inspiraremos para el análisis de redes de coexpresión de genes ponderados. Este paquete podemos obtenerlo de Bioconductor instalando BiocManager en nuestro entorno. Hemos utilizado las siguientes funciones:
+	\noindent \underline{\bfseries{WGCNA}}: Esta es la librería utilizada y en la que nos inspiraremos para el análisis de redes de coexpresión de genes ponderados. Este paquete podemos obtenerlo de Bioconductor instalando BiocManager en nuestro entorno. Hemos utilizado las siguientes funciones: \\
 	
 		\begin{itemize}
 	
@@ -27,22 +30,22 @@
 	
 			\item plotEigengeneNetworks: Esta función traza representaciones de dendrogramas y genes propios de redes de genes propios (consenso). En el caso de redes de genes propios de consenso, la función también traza medidas de preservación por pares entre redes de consenso en diferentes conjuntos.
 	
-			\item exportNetworkToCytoscape: Esta función exporta una red en archivos de lista de nodos y de borde en un formato adecuado para importar a Cytoscape.
+			\item exportNetworkToCytoscape: Esta función exporta una red en archivos de lista de nodos y de borde en un formato adecuado para importar a Cytoscape. \\
 			
 		\end{itemize}
 
 	
-	\underline{\bfseries{cluster}}: Es el utilizado para hacer el agrupamiento de los datos. Hemos usado las siguientes funciones.
+	\noindent\underline{\bfseries{cluster}}: Es el utilizado para hacer el agrupamiento de los datos. Hemos usado las siguientes funciones. \\
 	
 		\begin{itemize}
 			
 			\item pam: Esta función realiza un agrupamiento de los datos en k grupos "alrededor de medoides", una versión más robusta de K-means.
 			
-			\item hclust: Esta función realiza un análisis de agrupamiento jerárquico utilizando un conjunto de diferencias para los n objetos que se agrupan. Inicialmente, cada objeto se asigna a su propio grupo y luego el algoritmo procede de forma iterativa, en cada etapa uniendo los dos grupos más similares, continuando hasta que haya un solo grupo. En cada etapa, las distancias entre los conglomerados se vuelven a calcular mediante la fórmula de actualización de disimilitud de Lance-Williams de acuerdo con el método de conglomerado particular que se utilice.
+			\item hclust: Esta función realiza un análisis de agrupamiento jerárquico utilizando un conjunto de diferencias para los n objetos que se agrupan. Inicialmente, cada objeto se asigna a su propio grupo y luego el algoritmo procede de forma iterativa, en cada etapa uniendo los dos grupos más similares, continuando hasta que haya un solo grupo. En cada etapa, las distancias entre los conglomerados se vuelven a calcular mediante la fórmula de actualización de disimilitud de Lance-Williams de acuerdo con el método de conglomerado particular que se utilice. \\
 	
 		\end{itemize}
 	
-	\underline{\bfseries{DESeq2}}: Esta librería la usaremos para el análisis de datos de RNA-seq. Al igual que WGCNA, podemos obtenerla de Bioconductor instalando BiocManager en nuestro entorno. Las funciones usadas son:
+	\noindent\underline{\bfseries{DESeq2}}: Esta librería la usaremos para el análisis de datos de RNA-seq. Al igual que WGCNA, podemos obtenerla de Bioconductor instalando BiocManager en nuestro entorno. Las funciones usadas son: \\
 	
 		\begin{itemize}
 	
@@ -51,27 +54,26 @@
 
 			\item Counts: La ranura de conteos contiene los datos de conteo como una matriz de valores de conteo de números enteros no negativos, una fila para cada unidad de observación (gen o similar) y una columna para cada muestra.
 
-			\item Deseqm4: Esta función realiza un análisis predeterminado a través de la estimación de factores de tamaño, a través de la estimación de dispersión y a través del ajuste GLM binomial negativo y estadísticas de Wald.
+			\item Deseqm4: Esta función realiza un análisis predeterminado a través de la estimación de factores de tamaño, a través de la estimación de dispersión y a través del ajuste GLM binomial negativo y estadísticas de Wald. \\
 			
 		\end{itemize}
 	
-	\underline{\bfseries{DCGL}}: El utilizado para el análisis de coexpresión diferencial y análisis de regulación diferencial de datos de microarrays de expresión genómica. Hemos utilizado las siguientes funciones.
+	\noindent\underline{\bfseries{DCGL}}: El utilizado para el análisis de coexpresión diferencial y análisis de regulación diferencial de datos de microarrays de expresión genómica. Hemos utilizado las siguientes funciones. \\
 	
 	\begin{itemize}
 		
 		\item qLinkfilter: En esta función los enlaces genéticos con valores ‘q’ de pares de valores de coexpresión en cualquiera de las dos condiciones superiores al límite se retienen, mientras que los valores de coexpresión de otros enlaces se establecen en cero.
 		
-		\item WGCNA: El 'análisis de red de coexpresión de genes ponderados' pondera los vínculos con los coeficientes de correlación y compara las sumas de los coeficientes de correlación de un gen 
+		\item WGCNA: El 'análisis de red de coexpresión de genes ponderados' pondera los vínculos con los coeficientes de correlación y compara las sumas de los coeficientes de correlación de un gen.  \\
 		
 	\end{itemize}
 
-	\underline{\bfseries{coexnet}}:  es el utilizado para la construcción de la red de coexpresión. Podremos obtenerla de BiocManager. Hemos utilizado las siguientes funciones.
+	\noindent\underline{\bfseries{coexnet}}:  es el utilizado para la construcción de la red de coexpresión. Podremos obtenerla de BiocManager. Hemos utilizado las siguientes funciones. \\
 
 		\begin{itemize}
 	
-			\item createNet: Esta, es una función que a partir de una secuencia biológica genera un grafo no direccionado teniendo como palabras vértices, pudiendo esto tener su parámetro de tamaño fijado por el parámetro 'palabra'. Las conexiones entre palabras dependen del parámetro 'paso' que indica la próxima conexión que se formará
+			\item createNet: Esta, es una función que a partir de una secuencia biológica genera un grafo no direccionado teniendo como palabras vértices, pudiendo esto tener su parámetro de tamaño fijado por el parámetro 'palabra'. Las conexiones entre palabras dependen del parámetro 'paso' que indica la próxima conexión que se formará. \\
 	
 	\end{itemize}
 	
-	También se han usado otras librerías de R que nos han facilitado el entendimiento de los resultados, así como la aplicación de estos para el uso de algunas funciones. Algunos son dplyr y base para la manipulación y el manejor de datos; grDevices para la manipulación de gráficos; Stats, para cientas medidas estadísticas; entre otros. 
-	
+	\noindent También se han usado otras librerías de R que nos han facilitado el entendimiento de los resultados, así como la aplicación de estos para el uso de algunas funciones. Algunos son dplyr y base para la manipulación y el manejo de datos; grDevices para la manipulación de gráficos; Stats, para cientas medidas estadísticas; entre otros. 

@@ -1,1 +1,18 @@
+
+\newpage
+
 \section{Discusión}
+
+\noindent Para la correcta realización de nuestro estudio, al tener un número de datos tan grande, se ha requerido realizar una serie de filtrados. Tras una profunda revisión de los datos, nos dimos cuenta que habıa muchos valores nulos, que en este caso se corresponden con valores 0, por lo que primero comenzamos eliminando aquellas columnas que tengan más de un 51\% de 0. El numero de variables se ha reducido en torno a un 70\% \\
+
+\noindent Una vez realizado el filtrado, dado que todavía tenemos una enorme cantidad de valores 0, sustituiremos los 0 por la media de las columnas. A continuación, ya podremos realizar nuestro estudio. \\
+
+\noindent Comenzaremos realizando un Sample Clustering, el cuál es un método de muestreo donde se crea mútiples grupos de genes de una población donde son indicativos de características homógeneas y tienen la misma probabilidad de ser parte de la muestra. Se encarga de agrupar. Después realizamos la escapa de independencia, el valor 3 indica que se encuentra en torno al 50\% indicaría que tiene ese porcentaje de probabilidades de seguir un modelo de escala libre topológica. Como podemos observar, sigue una relación inversa con la conectividad media, ya que en la conectividad media, conforme aumenta el umbral suave disminuye la media de la conectividad.\\
+
+\noindent Hemos usado WGCNA para obtener los datos de expresión que han sido obtenidos mediante la separación de los clusters y a cada cluster, le aplicamos el análisis de coexpresión y vemos cuales tiene mayor correlación con la coexpresión del cluster 1. \\
+
+\noindent Después, pasamos a hacer un clustering jerérquico basado de la matriz de medición de superposición topológica (TOM) para los datos de expresión génica. La gráfica de medida de superposición topológica muestra grupos de genes (módulos) altamente interconectados. Los genes se asignaron a módulos nombrados por los colores debajo del dendrograma utilizando el método de corte de árbol dinámico. \\
+
+\noindent Una vez que hemos obtenido los módulos, realizaremos un mapa de calor que nos mostrará la correlación de cada uno de los módulos. Cuanto mayor es la correlación, más claro será el color. También obtenemos un mapa de adyacencia, cuanto más se acerca al color rojo más adyacentes son los módulos. \\
+
+\noindent Por último, realizamos una red de correlación que nos indica la relación de los genes.

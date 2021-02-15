@@ -1,13 +1,54 @@
-\graphicspath{ {/Users/laura/Desktop/BioSis/TF/project_template_BS_SARS-CoV2/results/} }
+
+\graphicspath{{/Users/laura/Desktop/BioSis/project_template_BS_SARS-CoV2/results/}}
+
+\newpage
+
 \section{Resultados}
 
-	\begin{figure}[h!]
-		\includegraphics[width=0.9\textwidth]{1_SampleClustering_imagen.jpg}
-		
-	\end{figure}
 
-	\begin{figure}[h!]
-		\includegraphics[width=0.9\textwidth]{figures/2_Scale independence_imagen.jpg}
-		\caption{Sample figure title}
+
+\noindent El primer resultado obtenido corresponde con un análisis de la topología de la red para varias potencias de umbral suave. El panel de la izquierda muestra el ajuste de escala libre, correspondiente al índice (eje y), en función de la potencia de umbral suave, que sería el (eje x). El panel derecho muestra la conectividad media (grados, eje y) en funcion de la potencia de umbral suave (eje x).
+
+
+	\begin{figure}[!htb]
+		\includegraphics[width=0.9\textwidth]{escalaIndep.jpg}
+		\caption{Escala de Independencia}
 		\label{fig:cost_megabase}
 	\end{figure}
+
+
+\noindent En la siguiente figura podemos ver un dendograma que expresa un clustering TOM disimilitud, y abajo las dos formas de obtener los módulos, primero mediante un árbol de corte dinámico y el otro mediante fusión. Cada color corresponde a un modulo.
+
+	\begin{figure}[!htb]
+		\includegraphics[width=0.9\textwidth]{mergeDinamic.jpg}
+		\caption{Dendograma de función Merge}
+		\label{fig:cost_megabase}
+	\end{figure}
+
+\noindent En la figura 3 tenemos un mapa de calor que nos expresa la correlación de los módulos expresados mediante corte de  árbol dinámico.
+
+	\begin{figure}[!htb]
+		\includegraphics[width=0.9\textwidth]{mapaCalor.jpg}
+		\caption{Mapa Calor}
+		\label{fig:cost_megabase}
+	\end{figure}
+
+
+\noindent En la figura 4 tenemos otro dendograma en el cual están agrupados por los módulos obtenidos anteriormente. A continuación, se encuentra su matriz de adyacencia.
+
+\begin{figure}[!htb]
+	\includegraphics[width=0.9\textwidth]{eigengene.jpg}
+	\caption{Gráfica de adyacencia}
+	\label{fig:cost_megabase}
+	\end{figure}
+
+\newpage
+
+\noindent Por último, en la figura 5, mostramos la red de correlación de las muestras y sus genes, en respuesta de las células epiteliales del pulmón a la infección por SARS-CoV2. Nos indican la relación que existe entre las muestras.
+
+	\begin{figure}[!htb]
+		\includegraphics[width=0.9\textwidth]{cor_pearson.jpeg}
+		\caption{Red de Correlación}
+		\label{fig:cost_megabase}
+	\end{figure}
+
